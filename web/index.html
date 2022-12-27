@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="bootstrap4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css" />
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="jquery/jquery.min.js"></script>
+	<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="js/popper.min.js"></script>
+	<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="bootstrap4/js/bootstrap.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>主页</title>
+	<style type="text/css">
+		body {
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+		}
+
+		header {
+			height: 80px;
+			background-color: #007FB0;
+			display: flex;
+			align-items: center;
+			padding-left: 40px;
+		}
+
+		#main {
+			flex-grow: 1;
+			display: flex;
+		}
+
+
+		#left {
+			background-color: #EEEEEE;
+			/* 	border: 1px #004085 solid; */
+		}
+
+		#left {
+			width: 200px;
+			flex-shrink: 0;
+			display: flex;
+			flex-direction: column;
+		}
+
+		#left>p {
+			height: 40px;
+			padding: 0px;
+			margin: 0px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #F5F5F5;
+			border-bottom: 1px solid darkgrey;
+		}
+
+		#left>a {
+			height: 50px;
+			background-color: #EEEEEE;
+			border-bottom: 1px darkgrey solid;
+			border-right: 1px darkgrey solid;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			text-decoration: none;
+			color: #007FB0;
+		}
+
+		#left>a:hover {
+			background-color: white;
+		}
+
+		#left>a:nth-child(2) {
+			background-image: url(img/icon_01.png);
+			background-repeat: no-repeat;
+			background-position: 40px 18px;
+		}
+
+		#left>a:nth-child(3) {
+			background-image: url(img/icon_02.png);
+			background-repeat: no-repeat;
+			background-position: 40px 18px;
+		}
+
+		#left>a:nth-child(4) {
+			background-image: url(img/icon_03.png);
+			background-repeat: no-repeat;
+			background-position: 40px 18px;
+		}
+
+		#content {
+			flex-grow: 1;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<img src="img/tit.png" />
+	</header>
+	<div id="main">
+		<div id="left">
+			<p>当前用户：管理员“lwx”</p>
+			<a href="pages/user_manager.html" target="myFrame">账户管理</a>
+			<a href="pages/item_manager.html" target="myFrame">栏目管理</a>
+			<a href="pages/news_manager.html" target="myFrame">新闻管理</a>
+		</div>
+		<iframe id="content" frameborder="0" name="myFrame" src="pages/user_manager.html"></iframe>
+	</div>
+</body>
+
+</html>
