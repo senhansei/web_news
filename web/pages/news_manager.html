@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>新闻管理</title>
+	<!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="../bootstrap4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link href="../bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="../jquery/jquery.min.js"></script>
+	<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="../js/popper.min.js"></script>
+	<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="../bootstrap4/js/bootstrap.min.js"></script>
+	<script src="../bootstrap-table/bootstrap-table.js"></script>
+	<script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<style type="text/css">
+		body {
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+		}
+
+		#header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 20px;
+			margin: 15px;
+		}
+
+		#header>a {
+			color: #007FB0;
+		}
+
+		#bodychild1>a {
+			color: #007FB0;
+		}
+
+		#header>#header1 {
+			display: flex;
+			flex-direction: row;
+		}
+
+		#header1>#header2 {
+			display: flex;
+			flex-direction: row;
+		}
+
+		#body {
+			display: flex;
+			flex-direction: column;
+			border: 1px solid darkgrey;
+			margin: 15px;
+		}
+
+		#body1 {
+			height: 50px;
+			display: flex;
+			flex-grow: 1;
+			align-items: center;
+			padding: 20px;
+			background-color: #cecece;
+			border-bottom: 1px solid darkgrey;
+		}
+
+		#body2 {
+			height: 500px;
+			display: flex;
+			flex-direction: column;
+			margin: 20px;
+		}
+
+		#body3 {
+			height: 50px;
+			display: flex;
+			flex-direction: row;
+			margin: 10px;
+		}
+
+		#body4 {
+			height: 40px;
+			width: 80px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: 1px solid darkgrey;
+		}
+	</style>
+	<script type="text/javascript">
+		$(function () {
+			$.ajax({
+				url: "../SelectItembyUserServlet",
+				method: "get",
+				success: function (data) {
+					for (var i = 0; i < data.rows.length; i++) {
+						//var $option = $("<option value="+data.rows[i].itetmId+">"+data.rows[i].itemName+"</option");
+						$("#addNewsItem").append("<option value=" + data.rows[i].itemId + ">" + data.rows[i].itemName + "</option");
+
+					}
+				}
+			});
+		});
+		function addNewItem() {
+			var addNewsTitle = $("#addNewsTitle").val();
+			var addNewsItem = $("#addNewsItem").val();
+			var addNewsContent = $("#addNewsContent").val();
+			console.log(addNewsTitle);
+			console.log(addNewsItem);
+			console.log(addNewsContent);
+			var newsdata = {
+				"addNewsTitle": addNewsTitle,
+				"addNewsItem": addNewsItem,
+				"addNewsContent": addNewsContent
+			};
+			console.log(newsdata);
+			//return;
+			$.ajax({
+				type: "POST",
+				url: "../AddNewsServlet",
+				data: newsdata,
+				success: function (msg) {
+					if (msg.flag) {
+						alert("成功插入新闻，芜湖~");
+						//刷新数据 $('#newItemTab').bootstrapTable("refresh");
+					} else {
+						alert("插入新闻失败~");
+					}
+					//$("#addItemName").val("");
+				}
+			});
+		}
+	</script>
+</head>
+
+<body>
+	<div id="header">
+		<a>新闻管理</a>
+		<div id="header1">
+			<div class="dropdown">
+				<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+					style="background-color: white; color: #cbcbcb;">
+					教务处
+				</button>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#">学生会</a>
+					<a class="dropdown-item" href="#">党支部</a>
+					<a class="dropdown-item" href="#">分团委</a>
+				</div>
+				<!--    <select>
+				  <option value="volvo">Volvo</option>
+				  <option value="saab">Saab</option>
+				  <option value="opel">Opel</option>
+				  <option value="audi">Audi</option>
+				</select>   -->
+			</div>
+			<div id="header2"><input type="text" class="form-control" placeholder="用户名">
+				<span class="input-group-text"><a href="#"><i class="fa-circle-thin"></i></a></span>
+			</div>
+		</div>
+	</div>
+	<!-- header yes -->
+	<div id="body">
+		<div id="body1">
+			<a>发布新闻</a>
+		</div>
+		<div id="body2">
+			<div id="body3">
+				<div id="body4"><a>标题</a> </div>
+				<div><input id="addNewsTitle" type="text" placeholder="新闻标题" style="height: 40px;width: 300px;"></div>
+			</div>
+			<div id="body3">
+				<div id="body4"><a>栏目</a> </div>
+				<!-- <div class="dropdown" style="width: 300px">
+					    <button type="button"  class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" style="background-color: white; color: #b8b8b8;width: 150px;height: 40px">
+					      教务处
+					    </button>
+					    <div class="dropdown-menu">
+					      <a class="dropdown-item" href="#">学生会</a>
+					      <a class="dropdown-item" href="#">党支部</a>
+					      <a class="dropdown-item" href="#">分团委</a>
+					      <a class="dropdown-item" href="#">院团委</a>
+					    </div>
+					  </div> -->
+				<select id="addNewsItem" class="form-control" style="height: 40px;width: 300px;">
+
+				</select>
+			</div>
+			<div style="margin: 10px;">
+				<textarea id="addNewsContent" rows="10" cols="100" placeholder="新闻内容"></textarea>
+			</div>
+			<div style="margin: 10px;"><button type="button" class="btn btn-primary" style="width: 80px;"
+					onClick="addNewItem()">发布</button></div>
+		</div>
+</body>
+
+</html>

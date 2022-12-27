@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="../bootstrap4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link href="../bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="../jquery/jquery.min.js"></script>
+	<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="../js/popper.min.js"></script>
+	<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="../bootstrap4/js/bootstrap.min.js"></script>
+	<script src="../bootstrap-table/bootstrap-table.js"></script>
+	<script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>用户管理</title>
+	<script type="text/javascript">
+		function batchDelete() {
+			var rows = $('#userInfoTab').bootstrapTable('getSelections');
+			console.log(rows);
+			var userIds = new Array();
+			for (var i = 0; i < rows.length; i++) {
+				userIds.push(rows[i].userId);
+			}
+			console.log(userIds);
+			$.ajax({
+				type: "POST",
+				url: "../DeleteUserServlet",
+				data: { "userIds": userIds },
+				success: function (msg) {
+					if (msg.flag) {
+						alert("成功");
+						//刷新数据
+						$('#userInfoTab').bootstrapTable("refresh");
+					} else {
+						alert("失败");
+					}
+				}
+			});
+		}
+
+		function addUserInfo() {
+			var userName = $("#addUserName").val();
+			var userPwd = $("#addUserPwd").val();
+			var userdata = {
+				"userName": userName,
+				"userPwd": userPwd
+			};
+			$.ajax({
+				type: "POST",
+				url: "../AddUserServlet",
+				data: userdata,
+				success: function (msg) {
+					if (msg.flag) {
+						alert("成功");
+						//刷新数据
+						$('#userInfoTab').bootstrapTable("refresh");
+					} else {
+						alert("失败");
+					}
+					$("#addUserName").val("");
+					$("#addUserPwd").val("");
+				}
+			});
+		}
+
+		function edit(userId) {
+			console.log(userId);
+			//通过该ID获取数据
+			//通过ajax发起请求获取用户信息
+			$.ajax({
+				type: "get",
+				url: "../SelectUserByIdServlet",
+				data: { "userId": userId },
+				success: function (msg) {
+					console.log(msg);
+					//获取成功后填入参数展示模态框
+					$("input[name='userId']").val(msg.userId);
+					$("input[name='userName']").val(msg.userName);
+					$("input[name='userPwd']").val(msg.userPwd);
+					$("#updateUserInfo").modal('show');
+				}
+			});
+			//执行更新
+		}
+
+		function updateUserInfo() {
+			var userInfo = {
+				"userId": $("input[name='userId']").val(),
+				"userName": $("input[name='userName']").val(),
+				"userPwd": $("input[name='userPwd']").val()
+			};
+			$.ajax({
+				type: "post",
+				url: "../UpdateUserServlet",
+				data: userInfo,
+				success: function (msg) {
+					if (msg.flag) {
+						alert("成功");
+						//刷新数据
+						$('#userInfoTab').bootstrapTable("refresh");
+					} else {
+						alert("失败");
+					}
+					$("input[name='userId']").val("");
+					$("input[name='userName']").val("");
+					$("input[name='userPwd']").val("");
+				}
+			});
+		}
+	</script>
+</head>
+
+<body>
+	<div style="padding: 10px">
+		<div id="toolbar" style="display: flex;">
+			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#addUserInfo"><i
+					class="fa fa-plus"></i> 添加</button>
+			<button type="button" class="btn btn-danger" onclick="batchDelete()"><i class="fa fa-minus"></i>
+				批量删除</button>
+			<!-- 	<input type="text" placeholder="请输入用户名" id="userName" value="zhangsan"/><button class="btn btn-info" onclick='search()'><i class="fa fa-search"></i></button> -->
+
+		</div>
+		<table id="userInfoTab" class="table table-hover table-bordered table-striped">
+
+		</table>
+
+		<div class="modal fade" id="updateUserInfo">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- 模态框头部 -->
+					<div class="modal-header bg-info">
+						<h4 class="modal-title">更新用户信息</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- 模态框主体 -->
+					<div class="modal-body">
+						<form>
+							<input type="hidden" name="userId" />
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="text" name="userName" class="form-control" placeholder="Username">
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-lock"></i></span>
+								</div>
+								<input type="password" name="userPwd" class="form-control" placeholder="userpwd">
+							</div>
+
+						</form>
+					</div>
+
+					<!-- 模态框底部 -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" data-dismiss="modal"
+							onclick=updateUserInfo()>更新</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 模态框 -->
+		<div class="modal fade" id="addUserInfo">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- 模态框头部 -->
+					<div class="modal-header bg-info">
+						<h4 class="modal-title">添加用户信息</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- 模态框主体 -->
+					<div class="modal-body">
+						<form>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="text" id="addUserName" class="form-control" placeholder="Username">
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-lock"></i></span>
+								</div>
+								<input type="password" id="addUserPwd" class="form-control" placeholder="userpwd">
+							</div>
+
+						</form>
+					</div>
+
+					<!-- 模态框底部 -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" data-dismiss="modal"
+							onclick=addUserInfo()>添加</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var icons = {
+			paginationSwitchDown: 'fa-caret-square-down',
+			paginationSwitchUp: 'fa-caret-square-up',
+			refresh: 'fa-refresh',
+			toggleOff: 'fa-toggle-off',
+			toggleOn: 'fa-toggle-on',
+			columns: 'fa-th-list',
+			fullscreen: 'fa-arrows-alt',
+			detailOpen: 'fa-plus',
+			detailClose: 'fa-minus'
+		};
+
+		//异步加载表格数据
+		$('#userInfoTab').bootstrapTable({
+			url: '../SelectAllServlet',         //请求后台的URL（*）
+			method: 'get',                      //请求方式（*）
+			toolbar: '#toolbar',                //工具按钮用哪个容器
+			striped: true,                      //是否显示行间隔色
+			cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			pagination: true,                   //是否显示分页（*）
+			icons: icons,                       //重新定义图标 修复图标加载失败问题
+			queryParams: function (params) {
+				var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+					limit: params.limit,   //页面大小
+					offset: params.offset  //页码
+					//userName: $("#userName").val()
+					//statu: $("#txt_search_statu").val()
+				};
+				return temp;
+			},
+			sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+			pageNumber: 1,                       //初始化加载第一页，默认第一页
+			pageSize: 10,                       //每页的记录行数（*）
+			pageList: [10, 15, 20, 25],        //可供选择的每页的行数（*）
+			//search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+			strictSearch: true,
+			showRefresh: true,                  //是否显示刷新按钮
+			clickToSelect: true,                //是否启用点击选中行
+			uniqueId: "userId",                     //每一行的唯一标识，一般为主键列
+			//showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+			//cardView: false,                    //是否显示详细视图
+			columns: [{
+				checkbox: true
+			}, {
+				field: 'userId',
+				title: '用户Id'
+			}, {
+				field: 'userName',
+				title: '用户名'
+			}, {
+				field: 'createTime',
+				title: '创建时间'
+			}, {
+				field: 'updateTime',
+				title: '更新时间'
+			}, {
+				field: 'userId',
+				title: '编辑',
+				formatter: function (value, row, index) {
+					var e = '<a class="btn btn-waring" href="#" mce_href="#" title="编辑" onclick="edit(\''
+						+ row.userId
+						+ '\')"><i class="fa fa-edit"></i>编辑</a> ';
+					return e;
+				}
+			}]
+		});
+	</script>
+</body>
+
+</html>
