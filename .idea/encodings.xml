@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/src/com/newcapec/dao/BaseDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/newcapec/dao/ItemUserDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/newcapec/dao/NewItemDao.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/newcapec/dao/NewsInfoDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/newcapec/dao/UserInfoDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/newcapec/servlet/newitem/UpdateItemServlet.java" charset="GBK" />
   </component>
